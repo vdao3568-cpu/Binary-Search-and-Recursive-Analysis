@@ -144,8 +144,8 @@ void runTests() {
     printResult(key, keyIndex1, compsI, "Key Index #1 (Iterative)");
     printResult(key, keyIndex2, compsR, "Key Index #2 (Recursive)");
 
-    //Test5: Missing value above the range
-    key = 90;
+    //Test5: Missing value in the range
+    key = 86;
     compsI = 0;
     compsR = 0;
     keyIndex1 = BinarySearch_I(numbers, key, compsI);
