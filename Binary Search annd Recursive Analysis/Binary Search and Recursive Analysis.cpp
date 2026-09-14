@@ -6,27 +6,30 @@ Honor Pledge: I solomnly swear that this is my own work, and not plagerized
 
 #include <iostream>
 #include <vector>
+#include <string>
 using namespace std;
 
 /**
 Name: BinarySearch_I
-Purpose: to iteratively search through a sorted vector to find key
+Purpose: to iteratively search through a sorted vector to find key and to count the amount of comparisons occuring
 Return: index of key if it exists, otherwise -1
 */
-int BinarySearch_I(vector<int> & numbers, int key) {
+int BinarySearch_I(vector<int> & numbers, int key, int& comparisons) {
     int low = 0;
     int high = numbers.size()-1;
+    comparisons = 0;
 
     while (high >= low) {
         int mid = (high + low) / 2;
 
+        comparisons++;
         if (numbers[mid] < key) {
 
             low = mid + 1;
         }
 
         else if (numbers[mid] > key) {
-
+            comparisons++;
             high = mid - 1;
         }
 
@@ -40,10 +43,10 @@ int BinarySearch_I(vector<int> & numbers, int key) {
 
 /**
 Name: BinarySearch_R
-Purpose: to recursively search through a sorted vector to find key
+Purpose: to recursively search through a sorted vector to find key and to count the amount of comparisons occuring
 Return: index of key if it exists, otherwise -1
 */
-int BinarySearch_R(vector<int> & numbers, int low, int high, int key) {
+int BinarySearch_R(vector<int> & numbers, int low, int high, int key, int& comparisons) {
 
     if (low > high) {
         
@@ -51,17 +54,17 @@ int BinarySearch_R(vector<int> & numbers, int low, int high, int key) {
     }
 
     int mid = (high + low) / 2;
-
+    comparisons++;
     // Upper range
     if (numbers[mid] < key) {
 
-        return BinarySearch_R(numbers, mid + 1, high, key);
+        return BinarySearch_R(numbers, mid + 1, high, key, comparisons);
     }
 
     // Lower Range
     else if (numbers[mid] > key) {
-
-        return BinarySearch_R(numbers, low, mid - 1, key);
+        comparisons++;
+        return BinarySearch_R(numbers, low, mid - 1, key, comparisons);
     }
 
     return mid; // found
@@ -71,7 +74,7 @@ int BinarySearch_R(vector<int> & numbers, int low, int high, int key) {
 Name: printResult
 Purpose: prints the search result in a consistent format
 */
-void printResult(int key, int index, const string& label) {
+void printResult(int key, int index, int comparisons, const string& label) {
     cout << label << endl;
 
     if (index == -1) {
@@ -84,7 +87,7 @@ void printResult(int key, int index, const string& label) {
         cout << "Found " << key << " at index " << index << "." << endl;
     }
 
-    cout<<endl;
+    cout << "Comparisons performed: " << comparisons << endl << endl;
 }
 
 /**
@@ -97,47 +100,59 @@ void runTests() {
     int key;
     int keyIndex1;
     int keyIndex2;
+    int compsI;
+    int compsR;
 
 
     //Test1: First Element
     key = 2;
-    keyIndex1 = BinarySearch_I(numbers, key);
-    keyIndex2 = BinarySearch_R(numbers, 0, numbers.size() - 1, key);
+    compsI = 0;
+    compsR = 0;
+    keyIndex1 = BinarySearch_I(numbers, key, compsI);
+    keyIndex2 = BinarySearch_R(numbers, 0, numbers.size() - 1, key, compsR);
 
-    printResult(key, keyIndex1, "Key Index #1 (Iterative)");
-    printResult(key, keyIndex2, "Key Index #2 (Recursive)");
+    printResult(key, keyIndex1, compsI, "Key Index #1 (Iterative)");
+    printResult(key, keyIndex2, compsR, "Key Index #2 (Recursive)");
 
     //Test2: Last Element
     key = 87;
-    keyIndex1 = BinarySearch_I(numbers, key);
-    keyIndex2 = BinarySearch_R(numbers, 0, numbers.size() - 1, key);
+    compsI = 0;
+    compsR = 0;
+    keyIndex1 = BinarySearch_I(numbers, key, compsI);
+    keyIndex2 = BinarySearch_R(numbers, 0, numbers.size() - 1, key, compsR);
 
-    printResult(key, keyIndex1, "Key Index #1 (Iterative)");
-    printResult(key, keyIndex2, "Key Index #2 (Recursive)");
+    printResult(key, keyIndex1, compsI, "Key Index #1 (Iterative)");
+    printResult(key, keyIndex2, compsR, "Key Index #2 (Recursive)");
 
     //Test3: Middle Element
     key = 10;
-    keyIndex1 = BinarySearch_I(numbers, key);
-    keyIndex2 = BinarySearch_R(numbers, 0, numbers.size() - 1, key);
+    compsI = 0;
+    compsR = 0;
+    keyIndex1 = BinarySearch_I(numbers, key, compsI);
+    keyIndex2 = BinarySearch_R(numbers, 0, numbers.size() - 1, key, compsR);
 
-    printResult(key, keyIndex1, "Key Index #1 (Iterative)");
-    printResult(key, keyIndex2, "Key Index #2 (Recursive)");
+    printResult(key, keyIndex1, compsI, "Key Index #1 (Iterative)");
+    printResult(key, keyIndex2, compsR, "Key Index #2 (Recursive)");
 
     //Test4: Missing value below the range
     key = 1;
-    keyIndex1 = BinarySearch_I(numbers, key);
-    keyIndex2 = BinarySearch_R(numbers, 0, numbers.size() - 1, key);
+    compsI = 0;
+    compsR = 0;
+    keyIndex1 = BinarySearch_I(numbers, key, compsI);
+    keyIndex2 = BinarySearch_R(numbers, 0, numbers.size() - 1, key, compsR);
 
-    printResult(key, keyIndex1, "Key Index #1 (Iterative)");
-    printResult(key, keyIndex2, "Key Index #2 (Recursive)");
+    printResult(key, keyIndex1, compsI, "Key Index #1 (Iterative)");
+    printResult(key, keyIndex2, compsR, "Key Index #2 (Recursive)");
 
     //Test5: Missing value above the range
     key = 90;
-    keyIndex1 = BinarySearch_I(numbers, key);
-    keyIndex2 = BinarySearch_R(numbers, 0, numbers.size() - 1, key);
+    compsI = 0;
+    compsR = 0;
+    keyIndex1 = BinarySearch_I(numbers, key, compsI);
+    keyIndex2 = BinarySearch_R(numbers, 0, numbers.size() - 1, key, compsR);
 
-    printResult(key, keyIndex1, "Key Index #1 (Iterative)");
-    printResult(key, keyIndex2, "Key Index #2 (Recursive)");
+    printResult(key, keyIndex1, compsI, "Key Index #1 (Iterative)");
+    printResult(key, keyIndex2, compsR, "Key Index #2 (Recursive)");
 }
 
 
